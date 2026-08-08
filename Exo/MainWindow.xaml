@@ -11,7 +11,7 @@
       middle of the glass rail, so there is exactly one set of window buttons.
     -->
     <Grid x:Name="RootGrid"
-          Background="#050506"
+          Background="#000000"
           Padding="0"
           UseLayoutRounding="True"
           SizeChanged="RootGrid_SizeChanged">

@@ -732,6 +732,25 @@ export function ExoApp() {
                 </div>
               </div>
               <div className="h-px bg-line" />
+              <div className="px-1 pb-1 pt-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-faint">
+                Exo family
+              </div>
+              <MenuRow
+                icon={<ExternalLink className="size-4" />}
+                label="Exo Launcher"
+                href="https://github.com/ImAvgErix/ExoLauncher/releases/latest"
+              />
+              <MenuRow
+                icon={<ExternalLink className="size-4" />}
+                label="Exo OS"
+                href="https://github.com/ImAvgErix/ExoOS/releases/latest"
+              />
+              <MenuRow
+                icon={<ExternalLink className="size-4" />}
+                label="Exo Link"
+                href="https://github.com/ImAvgErix/ExoLink/releases/latest"
+              />
+              <div className="h-px bg-line" />
               <MenuRow
                 icon={<Coffee className="size-4" />}
                 label="Buy me a coffee"

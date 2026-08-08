@@ -58,9 +58,10 @@ export function applyTextTheme(theme: TextTheme) {
   root.style.setProperty('--exo-scale', String(scale))
   // AMOLED Tailwind @theme tokens — ExoApp reads text-fg / text-muted / text-faint.
   root.style.setProperty('--color-fg', ink)
+  // Shared ecosystem muted/faint (Hub / Launcher / OS / Link)
   if (theme.textColour === 'grey') {
-    root.style.setProperty('--color-muted', '#7a7a80')
-    root.style.setProperty('--color-faint', '#4a4a50')
+    root.style.setProperty('--color-muted', '#6a6a70')
+    root.style.setProperty('--color-faint', '#444448')
   } else {
     root.style.setProperty('--color-muted', '#8a8a8a')
     root.style.setProperty('--color-faint', '#555555')

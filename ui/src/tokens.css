@@ -16,10 +16,10 @@
   --exo-text: #ffffff;
   --exo-scale: 1;
 
-  /* Text */
-  --exo-secondary: #8a8a8f;  /* hints, links, icon buttons, READY */
-  --exo-muted: #6a6a72;      /* labels, details, NOT INSTALLED */
-  --exo-dim-mark: #5c5c66;   /* brand glyph on a not-installed row */
+  /* Text — shared ecosystem ink (Hub / Launcher / OS / Link) */
+  --exo-secondary: #8a8a8a;  /* hints, links, icon buttons, READY */
+  --exo-muted: #555555;      /* labels, details, NOT INSTALLED */
+  --exo-dim-mark: #555555;   /* brand glyph on a not-installed row */
 
   /* Status */
   --exo-dot-ready: #3f3f46;
