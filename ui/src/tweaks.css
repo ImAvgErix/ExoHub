@@ -207,6 +207,73 @@
   background: var(--color-surface);
 }
 
+/* Shared family ambient (matches Launcher / OS) */
+.exo-ambient {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+.exo-ambient::before {
+  content: "";
+  position: absolute;
+  width: 70%;
+  height: 50%;
+  left: 15%;
+  top: 0;
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.045) 0%, transparent 70%);
+}
+.exo-ambient::after {
+  content: "";
+  position: absolute;
+  width: 40%;
+  height: 40%;
+  right: 0;
+  bottom: 10%;
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.025) 0%, transparent 70%);
+}
+
+/* Shared white pill CTA (Hub Apply / Launcher Play / OS Apply) */
+.exo-cta {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 22px;
+  border: none;
+  border-radius: 999px;
+  background: #f2f2f2;
+  color: #0a0a0a;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  box-shadow:
+    0 10px 32px rgba(255, 255, 255, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  transition: transform 200ms ease, background 160ms ease, box-shadow 200ms ease, opacity 140ms ease;
+}
+.exo-cta:hover:not(:disabled) {
+  background: #fff;
+  transform: translateY(-1px);
+  box-shadow:
+    0 14px 40px rgba(255, 255, 255, 0.14),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+.exo-cta:disabled {
+  opacity: 0.4;
+}
+
+/* Titlebar height parity with Launcher / Link */
+.exo-titlebar {
+  height: 52px;
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(14px);
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);

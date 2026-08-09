@@ -563,15 +563,28 @@ export function ExoApp() {
     live?.hasDisk === false ? 0 : Math.round(live?.diskPercent ?? 0)
 
   return (
-    <div className="exo-app flex h-dvh flex-col overflow-hidden bg-bg text-fg">
-      <header className="exo-titlebar relative z-30 flex h-14 shrink-0 items-center border-b border-line-soft px-4">
-        {/* Left: Home */}
-        <div className="relative z-10 flex w-[4.5rem] shrink-0 items-center justify-start">
+    <div className="exo-app relative flex h-dvh flex-col overflow-hidden bg-bg text-fg">
+      <div className="exo-ambient" aria-hidden />
+      <header className="exo-titlebar relative z-30 flex h-[52px] shrink-0 items-center border-b border-line-soft px-4">
+        {/* Left: brand + home */}
+        <div className="relative z-10 flex shrink-0 items-center gap-2.5">
+          <img
+            src="./logo.png"
+            alt=""
+            width={28}
+            height={28}
+            className="exo-no-drag size-7 rounded-[9px]"
+            draggable={false}
+          />
+          <div className="exo-no-drag leading-tight">
+            <div className="text-[13px] font-semibold tracking-tight">Exo Hub</div>
+            <div className="text-[10px] text-faint">Optimizers</div>
+          </div>
           <button
             type="button"
             onClick={() => setSelected(null)}
             className={cn(
-              'icon-btn chrome exo-no-drag',
+              'icon-btn chrome exo-no-drag ml-1',
               !selected ? 'bg-elevated text-fg' : 'text-muted hover:bg-hover hover:text-fg',
             )}
             aria-label="Home"
