@@ -9,6 +9,7 @@ import {
   FileText,
   Heart,
   Home,
+  Minus,
   Settings,
   Shield,
   X,
@@ -565,40 +566,33 @@ export function ExoApp() {
   return (
     <div className="exo-app relative flex h-dvh flex-col overflow-hidden bg-bg text-fg">
       <div className="exo-ambient" aria-hidden />
-      <header className="exo-titlebar relative z-30 flex h-[52px] shrink-0 items-center border-b border-line-soft px-4">
-        {/* Left: brand + home */}
-        <div className="relative z-10 flex shrink-0 items-center gap-2.5">
-          <img
-            src="./logo.png"
-            alt=""
-            width={28}
-            height={28}
-            className="exo-no-drag size-7 rounded-[9px]"
-            draggable={false}
-          />
-          <div className="exo-no-drag leading-tight">
-            <div className="text-[13px] font-semibold tracking-tight">Exo Hub</div>
-            <div className="text-[10px] text-faint">Optimizers</div>
+      <header className="exo-titlebar">
+        {/* Brand lockup — company shell */}
+        <div className="exo-brand exo-no-drag">
+          <img src="./logo.png" alt="" className="exo-brand-logo" width={28} height={28} draggable={false} />
+          <div className="exo-brand-text">
+            <span className="exo-brand-name">Exo Hub</span>
+            <span className="exo-brand-role">Optimizers</span>
           </div>
-          <button
-            type="button"
-            onClick={() => setSelected(null)}
-            className={cn(
-              'icon-btn chrome exo-no-drag ml-1',
-              !selected ? 'bg-elevated text-fg' : 'text-muted hover:bg-hover hover:text-fg',
-            )}
-            aria-label="Home"
-          >
-            <Home className="size-[18px]" strokeWidth={1.75} />
-          </button>
         </div>
 
-        {/* Center: module icons truly centered in the titlebar */}
+        {/* Product flair: module rail (centered) */}
         <nav
           className="exo-no-drag pointer-events-none absolute inset-x-0 flex items-center justify-center gap-2"
           aria-label="Modules"
         >
           <div className="pointer-events-auto flex items-center justify-center gap-2">
+            <button
+              type="button"
+              onClick={() => setSelected(null)}
+              className={cn(
+                'icon-btn chrome',
+                !selected ? 'bg-elevated text-fg' : 'text-muted hover:bg-hover hover:text-fg',
+              )}
+              aria-label="Home"
+            >
+              <Home className="size-[18px]" strokeWidth={1.75} />
+            </button>
             {MODULES.map((m) => {
               const missing = stateOf(m.id) === 'missing'
               return (
@@ -622,28 +616,36 @@ export function ExoApp() {
           </div>
         </nav>
 
-        {/* Right: settings + close */}
-        <div className="relative z-10 ml-auto flex shrink-0 items-center gap-0.5" ref={menuRef}>
+        {/* Window cluster — identical across Exo products */}
+        <div className="exo-titlebar-actions" ref={menuRef}>
           <button
             type="button"
+            className={cn('exo-winbtn', menuOpen && 'text-fg')}
             onClick={() => setMenuOpen((v) => !v)}
-            className={cn(
-              'icon-btn chrome',
-              menuOpen ? 'bg-elevated text-fg' : 'text-muted hover:bg-hover hover:text-fg',
-            )}
             aria-label="Settings"
             aria-expanded={menuOpen}
+            title="Settings"
           >
-            <Settings className="size-[18px]" strokeWidth={1.75} />
+            <Settings size={15} strokeWidth={1.75} />
+          </button>
+          <div className="exo-titlebar-divider" />
+          <button
+            type="button"
+            className="exo-winbtn"
+            aria-label="Minimize"
+            title="Minimize"
+            onClick={() => void host.minimize()}
+          >
+            <Minus size={15} strokeWidth={1.75} />
           </button>
           <button
             type="button"
-            className="icon-btn chrome text-muted hover:bg-bad/20 hover:text-bad"
+            className="exo-winbtn is-close"
             aria-label="Close"
             title="Close"
             onClick={() => void host.close()}
           >
-            <X className="size-[18px]" strokeWidth={1.75} />
+            <X size={15} strokeWidth={1.75} />
           </button>
 
           {menuOpen && (
