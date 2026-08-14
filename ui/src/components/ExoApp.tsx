@@ -183,7 +183,8 @@ export function ExoApp() {
       setError(null)
       const def = moduleById(id)
       const pick = picks[id] ?? 0
-      const options: Record<string, unknown> = { experimental: true, ...(def?.applyOptions?.(pick) ?? {}) }
+      // Do not send experimental — the host keeps the saved per-module default when the key is absent.
+      const options: Record<string, unknown> = { ...(def?.applyOptions?.(pick) ?? {}) }
 
       try {
         let next: ModuleStatus

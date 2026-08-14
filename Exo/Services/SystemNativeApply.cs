@@ -602,8 +602,8 @@ internal static class SystemNativeApply
         var usb = ReadUsbPowerDevices();
         if (usb is null)
         {
-            rows.Add(("USB power management (WMI)",
-                "Windows would not report per-device USB power settings on this machine.", false));
+            rows.Add(("USB power management (info)",
+                "Windows would not report per-device USB power settings on this machine.", true));
         }
         else if (usb.Count == 0)
         {

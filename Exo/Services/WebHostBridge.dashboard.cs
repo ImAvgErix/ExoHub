@@ -75,7 +75,7 @@ public sealed partial class WebHostBridge
 
         var systemTag = TagFromNativeDetect("system");
 
-        var internetTag = vm.InternetStatusTag;
+        var internetTag = InternetDashboardTag(vm.InternetStatusTag);
 
         var steamTag = vm.SteamStatusTag;
 
@@ -219,6 +219,31 @@ public sealed partial class WebHostBridge
 
         };
 
+    }
+
+    /// <summary>
+    /// Home must not green Internet from network-optimizer.json alone. A fresh probe
+    /// cache plus MatchesPreset is the same bar as module detect.
+    /// </summary>
+    private string InternetDashboardTag(string vmTag)
+    {
+        try
+        {
+            if (_internetProbeCache is not null
+                && DateTimeOffset.UtcNow - _internetProbeCacheUtc < InternetProbeFreshness)
+            {
+                var saved = _internetProbeCache.ActivePreset;
+                if (saved is NetworkPreset.LowestLatency or NetworkPreset.HighestThroughput
+                    && _services.Network.MatchesPreset(_internetProbeCache, saved))
+                    return "VERIFIED";
+            }
+        }
+        catch
+        {
+            /* keep the cheap tile tag */
+        }
+
+        return vmTag;
     }
 
 

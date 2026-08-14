@@ -78,6 +78,7 @@ describe('module state helpers', () => {
   it('maps host status kinds without inventing applied', () => {
     expect(stateFromStatus({ id: 'steam', isApplied: false, statusKind: 'partial', statusText: '', detail: '', features: [] })).toBe('partial')
     expect(stateFromStatus({ id: 'steam', isApplied: true, statusKind: 'applied', statusText: '', detail: '', features: [] })).toBe('applied')
+    expect(stateFromStatus({ id: 'steam', isApplied: false, statusKind: 'failed', statusText: 'Apply failed', detail: '', features: [] })).toBe('blocked')
   })
 
   it('does not treat a measured dashboard row as applied', () => {

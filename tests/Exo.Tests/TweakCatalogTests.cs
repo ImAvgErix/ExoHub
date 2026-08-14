@@ -44,8 +44,10 @@ public sealed class TweakCatalogTests
         Assert.Contains(catalog.Definitions, d => d.Id == "system.mmcss-net-throttle");
         Assert.Contains(catalog.Definitions, d => d.Id == "privacy.advertising-id");
         Assert.Contains(catalog.Definitions, d => d.Id == "privacy.telemetry");
+        Assert.DoesNotContain(catalog.Definitions, d => d.Id == "privacy.location");
+        Assert.DoesNotContain(catalog.Definitions, d => d.Id == "privacy.find-my-device");
         Assert.Equal(
-            1 + SystemLeverCatalog.Levers.Count + PrivacyLeverCatalog.Levers.Count,
+            1 + SystemLeverCatalog.Levers.Count + PrivacyLeverCatalog.SystemApplyLevers.Count,
             catalog.Definitions.Count);
     }
 

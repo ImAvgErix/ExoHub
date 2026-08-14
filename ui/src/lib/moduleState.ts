@@ -25,7 +25,7 @@ export function stateFromStatus(s: ModuleStatus | undefined | null): ModuleUiSta
   if (!s) return 'ready'
   const kind = (s.statusKind || '').toLowerCase()
   if (kind === 'missing' || /not installed/i.test(`${s.statusText} ${s.detail}`)) return 'missing'
-  if (kind === 'blocked') return 'blocked'
+  if (kind === 'blocked' || kind === 'failed') return 'blocked'
   if (kind === 'partial') return 'partial'
   if (kind === 'applied' || s.isApplied) return 'applied'
   return 'ready'

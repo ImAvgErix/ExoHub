@@ -86,7 +86,7 @@ public static class PrivacyLeverCatalog
         Levers.Where(lever => lever.Id is not "location" and not "find-my-device").ToArray();
 
     public static IEnumerable<RegistryTweakAdapter> BuildAdapters() =>
-        Levers.Select(lever => new RegistryTweakAdapter(
+        SystemApplyLevers.Select(lever => new RegistryTweakAdapter(
             new TweakDefinition<int>(
                 "privacy." + lever.Id,
                 lever.Title,

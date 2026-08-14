@@ -26,13 +26,14 @@ var report = await tracer.Verify();
 var restore = await tracer.Restore(snapshot);
 
 Expect("default catalog exposes the tracer and the full system lever set",
-    catalog.Definitions.Count == 1 + SystemLeverCatalog.Levers.Count + PrivacyLeverCatalog.Levers.Count
+    catalog.Definitions.Count == 1 + SystemLeverCatalog.Levers.Count + PrivacyLeverCatalog.SystemApplyLevers.Count
     && catalog.Definitions.Any(d => d.Id == "foundation.tracer")
     && catalog.Definitions.Any(d => d.Id == "system.game-mode")
     && catalog.Definitions.Any(d => d.Id == "system.hags")
     && catalog.Definitions.Any(d => d.Id == "system.mmcss-net-throttle")
     && catalog.Definitions.Any(d => d.Id == "privacy.advertising-id")
-    && catalog.Definitions.Any(d => d.Id == "privacy.telemetry"));
+    && catalog.Definitions.Any(d => d.Id == "privacy.telemetry")
+    && catalog.Definitions.All(d => d.Id is not "privacy.location" and not "privacy.find-my-device"));
 Expect("every system lever resolves as a typed registry tweak",
     SystemLeverCatalog.Levers.All(lever =>
     {
@@ -41,7 +42,7 @@ Expect("every system lever resolves as a typed registry tweak",
                && adapter.Definition.ValueType == typeof(int);
     }));
 Expect("every privacy lever resolves as a typed registry tweak",
-    PrivacyLeverCatalog.Levers.All(lever =>
+    PrivacyLeverCatalog.SystemApplyLevers.All(lever =>
     {
         var adapter = catalog.Resolve<int, RegistryTweakSnapshot>("privacy." + lever.Id);
         return adapter.Definition.Id == "privacy." + lever.Id

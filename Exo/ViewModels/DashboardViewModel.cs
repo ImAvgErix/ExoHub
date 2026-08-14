@@ -335,20 +335,21 @@ public partial class DashboardViewModel : ObservableObject
 
         if (!string.IsNullOrWhiteSpace(preset))
         {
-            HasLatency = true;
-            InternetStatusTag = "VERIFIED";
-            LatencyPrimary = linkBit ?? "Connection optimized";
+            HasLatency = latency is not null;
+            // A state file is a claim, not a live match. Detect greens only via MatchesPreset.
+            InternetStatusTag = "PARTIAL";
+            LatencyPrimary = linkBit ?? "Preset on disk";
             var dns = !string.IsNullOrWhiteSpace(dnsApply)
                 ? dnsApply
                 : quality is { Ok: true, IsQualityTest: true } && !string.IsNullOrWhiteSpace(quality.DnsProvider)
                     ? quality.DnsProvider + " DNS selected"
                     : "automatic DNS selection";
-            LatencySecondary = $"Adaptive stack applied - {dns}";
+            LatencySecondary = $"Last apply is on disk — verify the live path ({dns})";
             InternetLiveMetric = quality is { Ok: true, IsQualityTest: true }
                 ? BuildInternetLiveMetric(quality, latency)
                 : latency is not null
                     ? $"{latency.AfterP50Ms:0.#} ms idle - {latency.AfterJitterMs:0.#} ms jitter"
-                    : "Run Analyze & Apply to refresh the route sample";
+                    : "Open Internet to verify the current route";
             return;
         }
 
