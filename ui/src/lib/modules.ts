@@ -1,5 +1,5 @@
 import type { ModuleId, ModuleState } from './host'
-import amdLogo from '../assets/logos/amd-mark.png'
+import amdLogo from '../assets/logos/amd.svg'
 import braveLogo from '../assets/logos/brave.svg'
 import discordLogo from '../assets/logos/discord.svg'
 import internetLogo from '../assets/logos/internet.png'

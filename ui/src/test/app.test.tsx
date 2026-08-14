@@ -47,10 +47,12 @@ describe('ExoApp AMOLED shell', () => {
     expect(screen.queryByText('TEXT COLOUR')).not.toBeInTheDocument()
   })
 
-  it('exposes close next to settings (no minimize)', () => {
+  it('exposes close next to settings (no minimize)', async () => {
     render(<ExoApp />)
+    await waitFor(() => {
+      expect(screen.getByLabelText('Close')).toBeInTheDocument()
+    })
     expect(screen.queryByLabelText('Minimize')).not.toBeInTheDocument()
-    expect(screen.getByLabelText('Close')).toBeInTheDocument()
     expect(screen.getByLabelText('Settings')).toBeInTheDocument()
   })
 })
