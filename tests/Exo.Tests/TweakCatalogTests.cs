@@ -61,6 +61,22 @@ public sealed class TweakCatalogTests
     }
 
     [Fact]
+    public void SystemApplyPrivacyLevers_AreDocumentedDwordsOnly()
+    {
+        var applied = PrivacyLeverCatalog.SystemApplyLevers.Select(l => l.Id).ToArray();
+
+        Assert.Contains("advertising-id", applied);
+        Assert.Contains("tailored-experiences", applied);
+        Assert.Contains("activity-history", applied);
+        Assert.Contains("online-speech", applied);
+        Assert.Contains("telemetry", applied);
+        Assert.Contains("feedback-prompts", applied);
+        Assert.DoesNotContain("location", applied);
+        Assert.DoesNotContain("find-my-device", applied);
+        Assert.True(applied.Length < PrivacyLeverCatalog.Levers.Count);
+    }
+
+    [Fact]
     public void HagsLever_DeclaresSystemRestart()
     {
         var catalog = TweakCatalog.CreateDefault();

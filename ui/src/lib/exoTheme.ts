@@ -61,10 +61,10 @@ export function applyTextTheme(theme: TextTheme) {
   // Shared ecosystem muted/faint (Hub / Launcher / OS / Link)
   if (theme.textColour === 'grey') {
     root.style.setProperty('--color-muted', '#6a6a70')
-    root.style.setProperty('--color-faint', '#444448')
+    root.style.setProperty('--color-faint', '#4a4a4e')
   } else {
     root.style.setProperty('--color-muted', '#8a8a8a')
-    root.style.setProperty('--color-faint', '#555555')
+    root.style.setProperty('--color-faint', '#808080')
   }
   // Text size only — layout/icons stay fixed; type scales via CSS calc on text utilities.
   root.style.setProperty('--exo-text-scale', String(scale))

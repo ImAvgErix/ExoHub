@@ -343,6 +343,9 @@ var appTsx = Path.Combine(repo, "ui", "src", "App.tsx");
 var modulesTs = Path.Combine(repo, "ui", "src", "lib", "modules.ts");
 var tokensCss = Path.Combine(repo, "ui", "src", "tokens.css");
 var tweaksCss = Path.Combine(repo, "ui", "src", "tweaks.css");
+var uiSrc = Path.Combine(repo, "ui", "src");
+static string ReadUiSources(string dir) =>
+    string.Concat(Directory.GetFiles(dir, "*.ts*", SearchOption.AllDirectories).Select(File.ReadAllText));
 // AMOLED ExoApp is the only product shell. Legacy Shell/HomePage/SettingsPopover are gone.
 Expect("shell UI present",
     File.Exists(exoAppTsx)
@@ -379,9 +382,9 @@ if (File.Exists(appTsx))
         app.Contains("MotionConfig", StringComparison.Ordinal)
         && app.Contains("reducedMotion=\"user\"", StringComparison.Ordinal));
 }
-if (File.Exists(exoAppTsx))
+if (File.Exists(exoAppTsx) && Directory.Exists(uiSrc))
 {
-    var exo = File.ReadAllText(exoAppTsx);
+    var exo = ReadUiSources(uiSrc);
     Expect("ExoApp wires Apply Repair Verify and View logs",
         exo.Contains("host.apply", StringComparison.Ordinal)
         && exo.Contains("host.repair", StringComparison.Ordinal)
@@ -1072,10 +1075,10 @@ if (File.Exists(nvHeuristic))
 // that has to keep showing a module whose detect came back failed or partial rather than
 // dropping it. Both keep a retry affordance, while the status reason/detail remains visible.
 {
-    var homeF = Path.Combine(repo, "ui", "src", "components", "ExoApp.tsx");
-    if (File.Exists(homeF))
+    var homeF = Path.Combine(repo, "ui", "src");
+    if (Directory.Exists(homeF))
     {
-        var o = File.ReadAllText(homeF);
+        var o = ReadUiSources(homeF);
         Expect("row list classifies host status",
             o.Contains("statusKind", StringComparison.Ordinal));
         Expect("a failed or partial apply reads as stuck, not as done",

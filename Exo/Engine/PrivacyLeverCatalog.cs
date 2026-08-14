@@ -76,6 +76,15 @@ public static class PrivacyLeverCatalog
             "Feedback prompts off — no periodic 'how is Windows working?' dialogs.")
     ];
 
+    /// <summary>
+    /// Levers the System module actually writes. Location and Find My Device stay in
+    /// <see cref="Levers"/> so the catalog remains complete, but their live Windows
+    /// values are REG_SZ consent-store strings ("Allow" / "Deny"), not DWORDs —
+    /// writing 0 would be a type lie and Repair could not put the original string back.
+    /// </summary>
+    public static IReadOnlyList<PrivacyLeverDefinition> SystemApplyLevers { get; } =
+        Levers.Where(lever => lever.Id is not "location" and not "find-my-device").ToArray();
+
     public static IEnumerable<RegistryTweakAdapter> BuildAdapters() =>
         Levers.Select(lever => new RegistryTweakAdapter(
             new TweakDefinition<int>(
