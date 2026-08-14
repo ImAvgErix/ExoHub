@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import { ExoApp } from '../components/ExoApp'
-import { rankFeatureLines, stateFromStatus, staleCopy } from '../lib/moduleState'
+import { rankFeatureLines, stateFromDash, stateFromStatus, staleCopy } from '../lib/moduleState'
 
 // Host bridge falls back to mock data outside WebView2.
 
@@ -19,6 +19,8 @@ describe('ExoApp AMOLED shell', () => {
     expect(screen.getByLabelText('NVIDIA')).toBeInTheDocument()
     expect(screen.getByLabelText('Windows')).toBeInTheDocument()
     expect(screen.getByText('On this PC')).toBeInTheDocument()
+    expect(screen.getByText('Next')).toBeInTheDocument()
+    expect(screen.getByText('5 / 8 applied')).toBeInTheDocument()
   })
 
   it('opens a module page when an optimizer icon is clicked', async () => {
@@ -42,6 +44,7 @@ describe('ExoApp AMOLED shell', () => {
     await user.click(screen.getByLabelText('Settings'))
     expect(screen.getByLabelText('Update Exo')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /View logs/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /^Issues$/i })).toBeInTheDocument()
     expect(screen.queryByText(/Check for updates/i)).not.toBeInTheDocument()
     expect(screen.queryByText('CHECK FOR UPDATES')).not.toBeInTheDocument()
     expect(screen.queryByText('TEXT COLOUR')).not.toBeInTheDocument()
@@ -75,6 +78,18 @@ describe('module state helpers', () => {
   it('maps host status kinds without inventing applied', () => {
     expect(stateFromStatus({ id: 'steam', isApplied: false, statusKind: 'partial', statusText: '', detail: '', features: [] })).toBe('partial')
     expect(stateFromStatus({ id: 'steam', isApplied: true, statusKind: 'applied', statusText: '', detail: '', features: [] })).toBe('applied')
+  })
+
+  it('does not treat a measured dashboard row as applied', () => {
+    expect(stateFromDash({ id: 'internet', title: 'Internet', applied: false, state: 'partial' })).toBe('partial')
+    expect(stateFromDash({ id: 'internet', title: 'Internet', applied: true, state: 'applied' })).toBe('applied')
+    expect(stateFromDash({ id: 'amd', title: 'AMD', applied: false, state: 'blocked' })).toBe('blocked')
+  })
+
+  it('static catalog lines are not painted as applied', () => {
+    const lines = rankFeatureLines(undefined, ['Turns hardware acceleration off'])
+    expect(lines[0].active).toBeUndefined()
+    expect(lines[0].info).toBeFalsy()
   })
 
   it('explains superseded vs unstamped without blaming the machine', () => {

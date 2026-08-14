@@ -48,6 +48,9 @@ export function ExoApp() {
   const [updateDone, setUpdateDone] = useState<string | null>(null)
   const [verifyBusy, setVerifyBusy] = useState(false)
   const [verifySummary, setVerifySummary] = useState<string | null>(null)
+  const [returnView, setReturnView] = useState<View>('home')
+  const [coffeeUrl, setCoffeeUrl] = useState('https://www.buymeacoffee.com/UhhErix')
+  const [issuesUrl, setIssuesUrl] = useState('https://github.com/ImAvgErix/ExoHub/issues')
 
   // Default ready so icons stay clickable before the first dashboard tick.
   // Missing is only applied after a real host answer — never as a loading placeholder.
@@ -64,6 +67,8 @@ export function ExoApp() {
     void host.getSettings().then((s) => {
       if (cancelled) return
       if (s.appVersion) setVersion(s.appVersion)
+      if (s.buyMeACoffeeUrl) setCoffeeUrl(s.buyMeACoffeeUrl)
+      if (s.issuesUrl) setIssuesUrl(s.issuesUrl)
       setTheme(textThemeFrom(s, readCachedTextTheme()))
     }).catch(() => {})
     return () => {
@@ -233,7 +238,18 @@ export function ExoApp() {
 
   const goHome = () => {
     setSelected(null)
+    setReturnView('home')
+    setError(null)
     setView('home')
+  }
+
+  const toggleSettings = () => {
+    if (view === 'settings') {
+      setView(returnView)
+      return
+    }
+    setReturnView(view)
+    setView('settings')
   }
 
   useEffect(() => {
@@ -330,7 +346,7 @@ export function ExoApp() {
         stateOf={stateOf}
         onHome={goHome}
         onPick={pick}
-        onSettings={() => setView((v) => (v === 'settings' ? 'home' : 'settings'))}
+        onSettings={toggleSettings}
         settingsOpen={view === 'settings'}
       />
 
@@ -344,11 +360,15 @@ export function ExoApp() {
             updateDone={updateDone}
             verifyBusy={verifyBusy}
             verifySummary={verifySummary}
+            coffeeUrl={coffeeUrl}
             onColour={setColour}
             onSize={setSize}
             onUpdate={() => void runUpdate()}
             onVerifyAll={() => void runVerifyAll()}
             onLogs={openLogs}
+            onIssues={() => {
+              void host.openIssues().catch(() => openUrl(issuesUrl))
+            }}
             onOpenUrl={openUrl}
           />
         )}

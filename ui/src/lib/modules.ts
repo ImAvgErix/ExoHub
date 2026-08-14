@@ -1,4 +1,4 @@
-import type { ModuleId, ModuleState } from './host'
+import type { ModuleId } from './host'
 import amdLogo from '../assets/logos/amd.svg'
 import braveLogo from '../assets/logos/brave.svg'
 import discordLogo from '../assets/logos/discord.svg'
@@ -198,35 +198,6 @@ export const MODULES: readonly ModuleRow[] = [
     ],
   },
 ] as const
-
-type StatePresentation = {
-  word: string
-  /** Word colour; the ink token means "follow --exo-text". */
-  color: string
-  dot: string
-  label: string
-  filled: boolean
-}
-
-export const STATE_PRESENTATION: Record<ModuleState, StatePresentation> = {
-  applied: { word: 'ON', color: 'var(--exo-text)', dot: 'var(--exo-text)', label: 'REAPPLY', filled: false },
-  ready: { word: 'READY', color: 'var(--exo-secondary)', dot: 'var(--exo-dot-ready)', label: 'APPLY', filled: true },
-  blocked: { word: 'STUCK', color: 'var(--exo-amber)', dot: 'var(--exo-amber)', label: 'RETRY', filled: false },
-  missing: { word: 'NOT INSTALLED', color: 'var(--exo-muted)', dot: 'var(--exo-dot-missing)', label: 'NOT INSTALLED', filled: false },
-}
-
-export const BLOCKED_REASON =
-  'Windows has a restart pending. Exo resumes AMD from the blocked step afterwards.'
-
-export function tooltipFor(row: ModuleRow, state: ModuleState, pick: number): string {
-  if (state === 'missing') {
-    return row.missingHint ?? `${row.label} is not installed, so there is nothing to apply`
-  }
-  if (state === 'blocked') return BLOCKED_REASON
-  if (row.options) return `Choose a profile, then apply — currently ${row.options[pick]?.[0] ?? row.options[0][0]}`
-  const word = STATE_PRESENTATION[state].label
-  return `${word.charAt(0)}${word.slice(1).toLowerCase()} ${row.label}`
-}
 
 export function moduleById(id: string): ModuleRow | undefined {
   return MODULES.find((row) => row.id === id)

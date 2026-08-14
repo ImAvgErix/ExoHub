@@ -35,6 +35,7 @@ export function stateFromDash(m: DashboardSnapshot['modules'][number] | undefine
   if (!m) return 'ready'
   if (m.state === 'missing') return 'missing'
   if (m.state === 'blocked') return 'blocked'
+  if (m.state === 'partial') return 'partial'
   if (m.state === 'applied' || m.applied) return 'applied'
   return 'ready'
 }
@@ -87,7 +88,6 @@ export function rankFeatureLines(
     key: `static-${i}`,
     text: t,
     active: undefined,
-    info: true,
   }))
 }
 

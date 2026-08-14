@@ -81,7 +81,7 @@ export function OptimizerView({
             <ul className="mt-3 max-h-full space-y-2 overflow-y-auto">
               {doesLines.map((line) => {
                 const off = line.active === false && !line.info
-                const ok = line.active !== false || line.info
+                const on = line.active === true || !!line.info
                 return (
                   <li key={line.key} className="flex items-start gap-2.5 text-[13px] leading-snug text-fg/90">
                     <span
@@ -89,7 +89,7 @@ export function OptimizerView({
                       style={{
                         background: off
                           ? 'var(--color-bad)'
-                          : ok
+                          : on
                             ? 'var(--color-good)'
                             : 'var(--color-faint)',
                       }}

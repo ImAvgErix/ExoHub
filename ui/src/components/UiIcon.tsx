@@ -4,6 +4,7 @@ import {
   Check,
   CircleNotch,
   Coffee,
+  Bug,
   FileText,
   Gear,
   Heart,
@@ -26,6 +27,7 @@ export type UiIconName =
   | 'coffee'
   | 'heart'
   | 'shield'
+  | 'bug'
 
 const icons: Record<UiIconName, ComponentType<IconProps>> = {
   gear: Gear,
@@ -39,6 +41,7 @@ const icons: Record<UiIconName, ComponentType<IconProps>> = {
   coffee: Coffee,
   heart: Heart,
   shield: Shield,
+  bug: Bug,
 }
 
 export function UiIcon({

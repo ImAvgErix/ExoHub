@@ -446,11 +446,20 @@ if (File.Exists(modulesTs))
     foreach (var id in new[] { "'nvidia'", "'amd'", "'system'", "'internet'", "'steam'", "'discord'", "'spotify'", "'brave'" })
         Expect($"module row present: {id}", mods.Contains($"id: {id}", StringComparison.Ordinal));
     Expect("games is not a shell row", !mods.Contains("id: 'games'", StringComparison.Ordinal));
+}
+var moduleStateTs = Path.Combine(repo, "ui", "src", "lib", "moduleState.ts");
+if (File.Exists(moduleStateTs))
+{
+    var states = File.ReadAllText(moduleStateTs);
     Expect("all four row states are presented",
-        mods.Contains("applied:", StringComparison.Ordinal)
-        && mods.Contains("ready:", StringComparison.Ordinal)
-        && mods.Contains("blocked:", StringComparison.Ordinal)
-        && mods.Contains("missing:", StringComparison.Ordinal));
+        states.Contains("applied:", StringComparison.Ordinal)
+        && states.Contains("ready:", StringComparison.Ordinal)
+        && states.Contains("blocked:", StringComparison.Ordinal)
+        && states.Contains("missing:", StringComparison.Ordinal));
+}
+if (File.Exists(modulesTs))
+{
+    var mods = File.ReadAllText(modulesTs);
     // Every brand row carries real artwork, not a tinted silhouette. The imports are the
     // assertion: a row that lost its logo would fall back to nothing at all.
     foreach (var logo in new[] { "nvidia", "amd", "windows", "steam", "discord", "spotify", "brave" })

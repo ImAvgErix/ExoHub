@@ -54,14 +54,39 @@ export function HomeView({
                   <span className="ml-1 text-[12px] font-medium text-muted">Mb/s</span>
                 </p>
               </div>
+              <div>
+                <p className="text-[12px] text-muted">Idle</p>
+                <p className="tabular text-[1.5rem] font-semibold tracking-tight">
+                  {live?.netIdleMsValue != null && live.netIdleMsValue > 0
+                    ? live.netIdleMsValue.toFixed(0)
+                    : '—'}
+                  <span className="ml-1 text-[12px] font-medium text-muted">ms</span>
+                </p>
+              </div>
             </div>
-            <p className="truncate text-right text-[12px] text-faint">{live?.netLink || '—'}</p>
+            <p className="truncate text-right text-[12px] text-faint">
+              {[live?.netLink, live?.netRating].filter(Boolean).join(' · ') || '—'}
+            </p>
           </div>
           <div className="card flex flex-col justify-center px-5 py-4">
             <p className="truncate text-[14px] font-semibold">{specs?.os || 'Windows'}</p>
             {dash?.overview && <p className="mt-1 truncate text-[12px] text-muted">{dash.overview}</p>}
           </div>
         </div>
+
+        {dash?.next && (
+          <button
+            type="button"
+            onClick={() => onPick(dash.next!.id)}
+            className="card exo-press flex shrink-0 items-center justify-between gap-4 px-5 py-3 text-left"
+          >
+            <span className="min-w-0">
+              <span className="block text-[12px] font-medium text-muted">Next</span>
+              <span className="mt-0.5 block truncate text-[14px] font-semibold">{dash.next.label}</span>
+            </span>
+            <span className="shrink-0 text-[12px] font-semibold">Open</span>
+          </button>
+        )}
 
         <div className="min-h-0 flex-1 overflow-hidden">
           <p className="mb-2 text-[12px] font-medium text-muted">On this PC</p>

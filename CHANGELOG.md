@@ -3,10 +3,12 @@
 **Launcher-grade Hub shell, honest module copy, System privacy levers.**
 
 - Shell matches Exo Launcher chrome: shared titlebar motion, white CTA sheen, press scale, dedicated Settings view (not a cramped dropdown).
-- Home is a machine board again — meters plus an eight-optimizer status grid and firmware misses Exo can read but not set.
+- Home is a machine board again — meters plus an eight-optimizer status grid, a Next row, idle latency, and firmware misses Exo can read but not set.
+- Home status is honest: a measured Internet route is Partial, not Applied. The overview counts all eight optimizers.
 - Module copy matches what Apply actually writes. Spotify no longer claims it turns hardware acceleration *on*.
 - Windows Apply now writes the documented privacy DWORDs (advertising ID, tailored experiences, activity history, online speech, telemetry, feedback prompts) with the same snapshot / detect / Repair path as the other System levers. Location and Find My Device stay catalogued only — those consent-store values are strings, not DWORDs.
 - UI split out of the 1,100-line god file. Lucide dropped; Phosphor is the only icon family.
+- Settings is a single-column Launcher page. Issues is wired. The user guide matches the one-button Update.
 
 ## 1.0.1
 

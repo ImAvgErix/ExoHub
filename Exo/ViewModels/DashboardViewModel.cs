@@ -61,7 +61,7 @@ public partial class DashboardViewModel : ObservableObject
     public ObservableCollection<double> NetSeries { get; }
 
     [ObservableProperty] public partial string HeroSummary { get; set; } = "Maximum performance. No compromise.";
-    [ObservableProperty] public partial string OverviewPrimary { get; set; } = "0 / 6 verified";
+    [ObservableProperty] public partial string OverviewPrimary { get; set; } = "0 / 8 applied";
     [ObservableProperty] public partial string AppliedModulesList { get; set; } = "None applied yet";
 
     [ObservableProperty] public partial string NextActionModule { get; set; } = string.Empty;
@@ -590,17 +590,17 @@ public partial class DashboardViewModel : ObservableObject
         FrameTimeSecondary = DiscordStatusSecondary;
 
         var totalModules = CheckRows.Count;
-        OverviewPrimary = $"{appliedCount} / {totalModules} verified";
+        OverviewPrimary = $"{appliedCount} / {totalModules} applied";
         AppliedModulesList = appliedNames.Count > 0
             ? string.Join(" · ", appliedNames)
             : "None applied yet";
         UpdateNextAction(appliedCount);
         // Keep one short line for any residual bindings; header no longer stacks essays.
         HeroSummary = appliedCount >= totalModules
-            ? "All optimizers verified"
+            ? "All optimizers applied"
             : HasNextAction
                 ? $"Next: {NextActionModule}"
-                : $"{appliedCount}/{totalModules} verified";
+                : $"{appliedCount}/{totalModules} applied";
 
         RefreshLiveMemory();
     }

@@ -1,7 +1,7 @@
 import { UiIcon } from './UiIcon'
 import { host } from '../lib/host'
 
-/** Hub is a fixed 1400×900 canvas — close only, matching the 4.8.9 caption contract. */
+/** Hub is a fixed 1400×900 canvas — close only. Taskbar minimize stays native. */
 export function WindowChrome() {
   return (
     <button
