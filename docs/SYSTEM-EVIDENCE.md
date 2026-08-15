@@ -104,7 +104,7 @@ Three tiers, and every row below is assigned to one:
 | MSI mode + interrupt affinity (GPU, NIC, storage) | **APPLY** | Already done for the GPU; extend. |
 | VBS / HVCI / Memory Integrity | **APPLY, consent-first with a real warning** | Measurably costs frames in some titles. It is also a genuine security feature. Exo must state the trade-off plainly and default to leaving it alone — this is the user's call, not a silent optimization. |
 | Timer resolution / `useplatformclock` | **REFUSE** | Semantics changed in Windows 10 2004+. The classic advice is now folklore or actively harmful. |
-| Telemetry / service debloat | **APPLY, narrow** | Only services with a named, verifiable cost. Mass service-disabling is how machines break. |
+| Telemetry / service debloat | **APPLY, narrow** | Advertising ID, tailored experiences, activity history, online speech, diagnostic-data policy, and feedback prompts are System levers (v1.0.2) — snapshotted, detected, and Repairable. Location and Find My Device stay catalogued only: those consent-store values are REG_SZ, not DWORDs. Mass service-disabling is how machines break. |
 
 ---
 

@@ -11,7 +11,7 @@ export type ModuleId =
   | 'amd'
 
 /** What a module row reads as in the shell. */
-export type ModuleState = 'applied' | 'ready' | 'blocked' | 'missing'
+export type ModuleState = 'applied' | 'ready' | 'blocked' | 'missing' | 'partial'
 
 /** Shell text appearance. Persisted by the host and painted as CSS custom properties. */
 export type TextColour = 'white' | 'grey'
@@ -684,8 +684,8 @@ const mockLive = (): LiveStats => ({
 function mockCall<T>(method: string, params?: Record<string, unknown>): Promise<T> {
   if (method === 'dashboard.get') {
     return Promise.resolve({
-      overview: '3 / 8 verified',
-      heroSummary: 'Mock host',
+      overview: '5 / 8 applied',
+      heroSummary: 'Next: AMD',
       specs: { cpu: 'Ryzen 7', gpu: 'RTX 4070', ram: '32 GB', os: 'Windows 11 25H2' },
       live: mockLive(),
       modules: [
@@ -694,12 +694,12 @@ function mockCall<T>(method: string, params?: Record<string, unknown>): Promise<
         { id: 'steam', title: 'Steam', applied: true, state: 'applied' },
         { id: 'internet', title: 'Internet', applied: true, state: 'applied' },
         { id: 'nvidia', title: 'NVIDIA', applied: true, state: 'applied' },
-        { id: 'system', title: 'Your PC', applied: true, state: 'applied' },
+        { id: 'system', title: 'Windows', applied: true, state: 'applied' },
         { id: 'spotify', title: 'Spotify', applied: false, state: 'ready' },
-        { id: 'amd', title: 'AMD Radeon', applied: false, state: 'blocked' },
+        { id: 'amd', title: 'AMD', applied: false, state: 'blocked' },
       ],
-      next: { id: 'spotify', label: 'Spotify' },
-      appVersion: '4.5.5-dev',
+      next: { id: 'amd', label: 'AMD' },
+      appVersion: '1.0.2-dev',
     } as T)
   }
   if (method === 'dashboard.live') return Promise.resolve(mockLive() as T)
@@ -744,15 +744,15 @@ function mockCall<T>(method: string, params?: Record<string, unknown>): Promise<
     return Promise.resolve({
       updateAvailable: wantsUpdate,
       alreadyLatest: !wantsUpdate,
-      localVersion: '4.2.1',
-      remoteVersion: wantsUpdate ? '9.9.9' : '4.2.1',
+      localVersion: '1.0.2-dev',
+      remoteVersion: wantsUpdate ? '9.9.9' : '1.0.2-dev',
       releaseSummary: wantsUpdate ? 'Mock release notes' : null,
       message: 'mock',
     } as T)
   }
   if (method === 'settings.get' || method === 'settings.set') {
     return Promise.resolve({
-      appVersion: '4.5.5-dev',
+      appVersion: '1.0.2-dev',
       checkForUpdatesOnLaunch: true,
       welcomePromptSeen: true,
       buyMeACoffeeUrl: 'https://www.buymeacoffee.com/UhhErix',
@@ -770,10 +770,10 @@ function mockCall<T>(method: string, params?: Record<string, unknown>): Promise<
       ok: true,
       sections: [
         {
-          version: '3.16.6',
+          version: '1.0.2',
           bullets: [
-            'PC-aware: discover this machine live before applying',
-            'Task Scheduler inventory per PC',
+            'Launcher-grade shell and honest System privacy levers',
+            'Home status matches what Apply actually verified',
           ],
         },
         {
@@ -794,8 +794,8 @@ function mockCall<T>(method: string, params?: Record<string, unknown>): Promise<
       alreadyLatest: !installsMockUpdate,
       installed: installsMockUpdate,
       shouldExit: false,
-      appVersion: '4.5.5-dev',
-      remoteVersion: installsMockUpdate ? '9.9.9' : '4.5.5-dev',
+      appVersion: '1.0.2-dev',
+      remoteVersion: installsMockUpdate ? '9.9.9' : '1.0.2-dev',
     } as T)
   }
   if (method === 'shell.openLogs') {

@@ -1,6 +1,6 @@
 # Exo tweak audit (evidence-based)
 
-Last pass: v3.6.1. Goal: an evidence-based ceiling of real OS/driver/client performance for every module —
+Last pass: v1.0.2. Goal: an evidence-based ceiling of real OS/driver/client performance for every module —
 every known tweak in the landscape is either implemented or listed here with a concrete exclusion
 reason. Nothing is silently skipped, and nothing invented (no dead registry folklore).
 
@@ -188,6 +188,16 @@ DRS database is snapshotted before the first import, and Repair restores it exac
 | Driver/component stripping | **Excluded** | AMD has no equivalent verified manifest route; partial display-driver removal is not an acceptable optimization. |
 | AMD External Events service | **Excluded** | It carries FreeSync/overlay behavior; disabling it can regress wanted GPU features. |
 | Repair | **Exact baseline** | A durable first snapshot is written before mutation. Task state and every changed telemetry DWORD restore through the same elevated path. |
+
+## Windows / privacy
+
+| Surface | Verdict | Why |
+|---------|---------|-----|
+| System registry levers (HAGS, Game Mode, Game DVR, MMCSS, NTFS, USB power) | **Keep** | Single source in `SystemLeverCatalog`; System Apply consumes the same list. |
+| Advertising ID / tailored experiences / activity history / online speech / feedback prompts | **Implemented (v1.0.2)** | Documented DWORD privacy levers. Snapshot + live detect + Repair. |
+| Diagnostic data `AllowTelemetry=0` | **Implemented (v1.0.2)** | Policy key; takes effect after reboot. Home SKUs may clamp behavior; the written value is still what Repair restores. |
+| Location / Find My Device consent store | **Excluded from Apply** | Live values are REG_SZ `"Allow"` / `"Deny"`. Writing DWORD 0 would be a type lie. |
+| `Win32PrioritySeparation` / timer-resolution folklore | **Excluded** | See `docs/SYSTEM-EVIDENCE.md`. |
 
 ## App runtime / publish
 

@@ -34,7 +34,7 @@ function Get-RegValue($path, $name) {
 # -- WINDOWS --------------------------------------------------------------
 Sec "WINDOWS"
 $wp = powercfg /getactivescheme 2>&1 | Out-String
-# Hub ships a fixed plan GUID (ExoPowerPlan.ExoSchemeGuid) and names it "Exo - …".
+# Hub ships a fixed plan GUID (ExoPowerPlan.ExoSchemeGuid) and names it "Exo - ...".
 # Older kits left "Exo Extreme" / LiteOS GUIDs active. Live-verify accepts any Exo-family
 # active scheme; Detect itself still requires the current GUID + settings for Applied.
 $exoFamilyGuid = $wp -match '7ae4b8a5-2c19-4d6f-9f3e-1b0c5d8e4a72|a1111111-e80e-4e0e-a111-0e0e0e0e0e01|77777777-7777-7777-7777-777777777777'

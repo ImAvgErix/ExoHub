@@ -2,15 +2,15 @@
 
 @theme {
   --color-bg: #000000;
-  --color-surface: #0c0c0c;
-  --color-elevated: #141414;
-  --color-hover: #1c1c1c;
+  --color-surface: #000000;
+  --color-elevated: #080808;
+  --color-hover: #0c0c0c;
   --color-line: #222222;
   --color-line-soft: #161616;
   /* Overridden at runtime by applyTextTheme (--color-fg / muted / faint). */
   --color-fg: #f2f2f2;
   --color-muted: #8a8a8a;
-  --color-faint: #555555;
+  --color-faint: #808080;
   --color-good: #3dd68c;
   --color-bad: #ff5c5c;
   --font-sans: "Geist Variable", "Geist", "Inter", "SF Pro Display", system-ui, -apple-system, sans-serif;
@@ -234,90 +234,11 @@
   background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.025) 0%, transparent 70%);
 }
 
-/* Shared white pill CTA (Hub Apply / Launcher Play / OS Apply) */
-.exo-cta {
-  position: relative;
-  overflow: hidden;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  height: 44px;
-  padding: 0 22px;
-  border: none;
-  border-radius: 999px;
-  background: #f2f2f2;
-  color: #0a0a0a;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  box-shadow:
-    0 10px 32px rgba(255, 255, 255, 0.1),
-    0 0 0 1px rgba(255, 255, 255, 0.05);
-  transition: transform 200ms ease, background 160ms ease, box-shadow 200ms ease, opacity 140ms ease;
-}
-.exo-cta:hover:not(:disabled) {
-  background: #fff;
-  transform: translateY(-1px);
-  box-shadow:
-    0 14px 40px rgba(255, 255, 255, 0.14),
-    0 0 0 1px rgba(255, 255, 255, 0.08);
-}
-.exo-cta:disabled {
-  opacity: 0.4;
-}
-
-/* Titlebar height parity with Launcher / Link */
-.exo-titlebar {
-  height: 52px;
-  background: rgba(0, 0, 0, 0.88);
-  backdrop-filter: blur(14px);
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .spin {
-  animation: spin 800ms linear infinite;
-}
-
-@keyframes fade {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.fade {
-  animation: fade 160ms ease-out both;
-}
-
-@keyframes drop {
-  from {
-    opacity: 0;
-    transform: translateY(-4px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.drop {
-  animation: drop 140ms ease-out both;
+  animation: exo-spin 800ms linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fade,
-  .drop,
-  .spin,
   .icon-btn {
     animation: none !important;
     transition: none !important;

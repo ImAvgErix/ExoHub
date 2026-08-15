@@ -11,6 +11,8 @@ on:
 
 permissions:
   contents: write
+  id-token: write
+  attestations: write
 
 jobs:
   validate-and-build:
@@ -100,9 +102,18 @@ jobs:
         run: |
           # .NET and npm dependency inventory for the release. Both ecosystems are
           # locked (packages.lock.json / package-lock.json), so the SBOM reflects
-          # exactly what ships.
-          dotnet tool install --tool-path ./tools-sbom CycloneDX --version 3.5.4
-          ./tools-sbom/CycloneDX.exe dotnet Exo.sln -o release --json
+          # exactly what ships. Pin CycloneDX 6.2.0 - 3.5.4 was delisted from NuGet
+          # and the 6.x CLI is `dotnet-CycloneDX <sln> -o <dir> -F json` (no `dotnet`
+          # verb, no `--json` flag).
+          dotnet tool install --tool-path ./tools-sbom CycloneDX --version 6.2.0
+          if ($LASTEXITCODE -ne 0) { throw "CycloneDX 6.2.0 install failed (exit $LASTEXITCODE)." }
+          $cdx = @('./tools-sbom/dotnet-CycloneDX.exe', './tools-sbom/CycloneDX.exe') |
+            Where-Object { Test-Path $_ } |
+            Select-Object -First 1
+          if (-not $cdx) { throw 'CycloneDX executable missing after install.' }
+          & $cdx Exo.sln -o release -F json --filename bom.json
+          if ($LASTEXITCODE -ne 0) { throw "CycloneDX SBOM generation failed (exit $LASTEXITCODE)." }
+          if (-not (Test-Path release/bom.json)) { throw 'CycloneDX did not write release/bom.json.' }
           Move-Item release/bom.json release/Exo.sbom.json -Force
           npm --prefix ui run sbom
           if (-not (Test-Path release/Exo.UI.sbom.json)) {
@@ -160,15 +171,16 @@ jobs:
             throw "Release $tag already exists. Releases are immutable; bump VERSION instead of replacing it."
           }
 
+          $sha = '${{ github.sha }}'
           $notes = @"
-          ## Exo Hub $version
+## Exo Hub $version
 
-          **[ExoHub.exe](https://github.com/${{ github.repository }}/releases/download/$tag/ExoHub.exe)** — double-click to install and launch.
+**[ExoHub.exe](https://github.com/${{ github.repository }}/releases/download/$tag/ExoHub.exe)** - double-click to install and launch.
 
-          Validated commit: `${{ github.sha }}`
-          SHA-256: `$actual`
-          SBOM: `Exo.sbom.json` (.NET) + `Exo.UI.sbom.json` (UI), attached to this release.
-          "@
+Validated commit: $sha
+SHA-256: $actual
+SBOM: Exo.sbom.json (.NET) + Exo.UI.sbom.json (UI), attached to this release.
+"@
           $assets = @(
             'release/ExoHub.exe', 'release/ExoHub.exe.sha256',
             'release/Exo.exe', 'release/Exo.exe.sha256',

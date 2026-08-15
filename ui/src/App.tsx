@@ -4,7 +4,7 @@ import { initHostBridge } from './lib/host'
 import { ExoApp } from './components/ExoApp'
 
 /**
- * Exo 4.8.1 — AMOLED tweaks UI (Grok Build design) wired to the host.
+ * Exo Hub — AMOLED shell, Launcher chrome, wired to the host.
  */
 export default function App() {
   useEffect(() => {

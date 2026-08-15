@@ -246,7 +246,7 @@ function Test-DiscOptModuleDirHasPayload {
     }
 }
 
-# Discord bumps module folder suffixes (discord_desktop_core-1 → -2). Require family prefixes only.
+# Discord bumps module folder suffixes (discord_desktop_core-1 -> -2). Require family prefixes only.
 $script:DiscOptRequiredRuntimePrefixes = @(
     'discord_desktop_core',
     'discord_utils',

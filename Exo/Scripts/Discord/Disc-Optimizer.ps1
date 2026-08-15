@@ -429,7 +429,7 @@ $Protected = @(
 )
 $DiscordSetupUrl = 'https://discord.com/api/downloads/distributions/app/installers/latest?channel=stable&platform=win&arch=x64'
 # Modern Discord (1.0.92xx+) no longer ships discord_dispatch / discord_modules.
-# Family prefixes only — Discord bumps trailing -N (desktop_core-1 → desktop_core-2).
+# Family prefixes only - Discord bumps trailing -N (desktop_core-1 -> desktop_core-2).
 $RequiredModulePrefixes = @(
     'discord_desktop_core',
     'discord_utils',

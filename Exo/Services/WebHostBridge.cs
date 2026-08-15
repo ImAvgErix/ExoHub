@@ -584,7 +584,21 @@ public sealed partial class WebHostBridge
 
                 case "system":
 
-                    return SystemNativeApply.Detect().Applied ? "VERIFIED" : "NOT APPLIED";
+                    {
+
+                        var (applied, rows) = SystemNativeApply.Detect();
+
+                        if (applied) return "VERIFIED";
+
+                        var owned = rows.Where(r =>
+
+                            !ModuleStatusClassifier.IsInfoTitle(r.Title) && r.Title != "Processor").ToArray();
+
+                        if (owned.Any(r => r.Active) && owned.Any(r => !r.Active)) return "PARTIAL";
+
+                        return "NOT APPLIED";
+
+                    }
 
                 case "spotify":
 
@@ -598,6 +612,14 @@ public sealed partial class WebHostBridge
 
                             return "MISSING";
 
+                        var owned = d.Features.Where(f =>
+
+                            !ModuleStatusClassifier.IsInfoTitle(f.Title)
+
+                            && f.Title.IndexOf("installed", StringComparison.OrdinalIgnoreCase) < 0).ToArray();
+
+                        if (owned.Any(f => f.IsActive) && owned.Any(f => !f.IsActive)) return "PARTIAL";
+
                         return "NOT APPLIED";
 
                     }
@@ -606,11 +628,17 @@ public sealed partial class WebHostBridge
 
                     {
 
-                        var (installed, applied, _) = AmdNativeApply.Detect();
+                        var (installed, applied, rows) = AmdNativeApply.Detect();
 
                         if (!installed) return "MISSING";
 
-                        return applied ? "VERIFIED" : "NOT APPLIED";
+                        if (applied) return "VERIFIED";
+
+                        var owned = rows.Where(r => !ModuleStatusClassifier.IsInfoTitle(r.Title)).ToArray();
+
+                        if (owned.Any(r => r.Active) && owned.Any(r => !r.Active)) return "PARTIAL";
+
+                        return "NOT APPLIED";
 
                     }
 

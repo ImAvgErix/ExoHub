@@ -44,8 +44,10 @@ public sealed class TweakCatalogTests
         Assert.Contains(catalog.Definitions, d => d.Id == "system.mmcss-net-throttle");
         Assert.Contains(catalog.Definitions, d => d.Id == "privacy.advertising-id");
         Assert.Contains(catalog.Definitions, d => d.Id == "privacy.telemetry");
+        Assert.DoesNotContain(catalog.Definitions, d => d.Id == "privacy.location");
+        Assert.DoesNotContain(catalog.Definitions, d => d.Id == "privacy.find-my-device");
         Assert.Equal(
-            1 + SystemLeverCatalog.Levers.Count + PrivacyLeverCatalog.Levers.Count,
+            1 + SystemLeverCatalog.Levers.Count + PrivacyLeverCatalog.SystemApplyLevers.Count,
             catalog.Definitions.Count);
     }
 
@@ -58,6 +60,22 @@ public sealed class TweakCatalogTests
             Assert.NotEqual(unchecked((int)0xFFFFFFFF), lever.Value);
         });
         Assert.Equal(10, SystemLeverCatalog.Levers.Single(l => l.Id == "mmcss-net-throttle").Value);
+    }
+
+    [Fact]
+    public void SystemApplyPrivacyLevers_AreDocumentedDwordsOnly()
+    {
+        var applied = PrivacyLeverCatalog.SystemApplyLevers.Select(l => l.Id).ToArray();
+
+        Assert.Contains("advertising-id", applied);
+        Assert.Contains("tailored-experiences", applied);
+        Assert.Contains("activity-history", applied);
+        Assert.Contains("online-speech", applied);
+        Assert.Contains("telemetry", applied);
+        Assert.Contains("feedback-prompts", applied);
+        Assert.DoesNotContain("location", applied);
+        Assert.DoesNotContain("find-my-device", applied);
+        Assert.True(applied.Length < PrivacyLeverCatalog.Levers.Count);
     }
 
     [Fact]

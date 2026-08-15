@@ -65,6 +65,17 @@ internal static class SystemNativeApply
             .Select(l => new RegLever(l.Id, l.Title, l.Hive, l.Path, l.Name, l.Value, l.Why, l.NeedsReboot))
             .ToArray();
 
+    /// <summary>
+    /// Documented privacy DWORDs the user guide already lists on this module.
+    /// Consent-store string keys stay in the catalog but are not written here.
+    /// </summary>
+    private static readonly RegLever[] PrivacyLevers =
+        Exo.Engine.PrivacyLeverCatalog.SystemApplyLevers
+            .Select(l => new RegLever(l.Id, l.Title, l.Hive, l.Path, l.Name, l.Value, l.Why, l.NeedsReboot))
+            .ToArray();
+
+    private static readonly RegLever[] AllRegLevers = [.. RegLevers, .. PrivacyLevers];
+
     // ── USB device power saving ───────────────────────────────────────────────────────────
 
     /// <summary>
@@ -172,7 +183,7 @@ internal static class SystemNativeApply
             Reason = $"{ExoPowerPlan.PlanName(cpu)} - {planSettings.Count} settings for {cpu.Summary}"
         });
 
-        Report("Scheduling, capture and storage flags…");
+        Report("Scheduling, capture, storage and privacy flags…");
         steps.AddRange(ApplyRegLevers(admin, elevOps));
 
         Report("USB device power management…");
@@ -194,7 +205,7 @@ internal static class SystemNativeApply
 
     private static IEnumerable<NativeApplyStep> ApplyRegLevers(bool admin, List<string> elevOps)
     {
-        foreach (var lever in RegLevers)
+        foreach (var lever in AllRegLevers)
         {
             // HKCU is writable without elevation; HKLM is staged into the single elevated
             // batch so the whole module costs one UAC prompt rather than one per key.
@@ -269,10 +280,10 @@ internal static class SystemNativeApply
     private static string BuildMessage(IReadOnlyList<NativeApplyStep> steps)
     {
         var failed = steps.Count(s => s.Status == "fail");
-        var reboot = RegLevers.Any(l => l.NeedsReboot);
-        var tail = reboot ? " GPU scheduling changes apply after a reboot." : "";
+        var reboot = AllRegLevers.Any(l => l.NeedsReboot);
+        var tail = reboot ? " GPU scheduling and diagnostic-data changes apply after a reboot." : "";
         return failed == 0
-            ? "Machine tuned: CPU power, PCIe, USB, scheduling, capture and storage." + tail
+            ? "Machine tuned: CPU power, PCIe, USB, scheduling, capture, storage and privacy." + tail
             : $"Applied with {failed} step(s) failing — open the log for the exact keys." + tail;
     }
 
@@ -304,7 +315,7 @@ internal static class SystemNativeApply
         Report("Restoring the previous power plan…");
         steps.Add(RestorePlan(snap, elevOps));
 
-        Report("Restoring scheduling, capture and storage flags…");
+        Report("Restoring scheduling, capture, storage and privacy flags…");
         steps.AddRange(RestoreRegLevers(snap, admin, elevOps));
 
         Report("Restoring USB device power management…");
@@ -355,7 +366,7 @@ internal static class SystemNativeApply
             yield break;
         }
 
-        foreach (var lever in RegLevers)
+        foreach (var lever in AllRegLevers)
         {
             if (!reg.TryGetPropertyValue(lever.Id, out var recorded)) continue;
             var had = recorded is not null;
@@ -439,7 +450,7 @@ internal static class SystemNativeApply
                 return BackfillSnapshot();
 
             var reg = new JsonObject();
-            foreach (var lever in RegLevers)
+            foreach (var lever in AllRegLevers)
             {
                 var v = NativeReg.GetDword(lever.Hive, lever.Path, lever.Name);
                 reg[lever.Id] = v is null ? null : JsonValue.Create(v.Value);
@@ -496,7 +507,7 @@ internal static class SystemNativeApply
                 reg = new JsonObject();
                 root["registry"] = reg;
             }
-            foreach (var lever in RegLevers)
+            foreach (var lever in AllRegLevers)
             {
                 if (reg.ContainsKey(lever.Id)) continue;
                 var v = NativeReg.GetDword(lever.Hive, lever.Path, lever.Name);
@@ -570,7 +581,7 @@ internal static class SystemNativeApply
         var (planOk, planRows) = ExoPowerPlan.Detect();
         rows.AddRange(planRows);
 
-        foreach (var lever in RegLevers)
+        foreach (var lever in AllRegLevers)
         {
             var current = NativeReg.GetDword(lever.Hive, lever.Path, lever.Name);
             var ok = current == lever.Value;
@@ -591,8 +602,8 @@ internal static class SystemNativeApply
         var usb = ReadUsbPowerDevices();
         if (usb is null)
         {
-            rows.Add(("USB power management (WMI)",
-                "Windows would not report per-device USB power settings on this machine.", false));
+            rows.Add(("USB power management (info)",
+                "Windows would not report per-device USB power settings on this machine.", true));
         }
         else if (usb.Count == 0)
         {

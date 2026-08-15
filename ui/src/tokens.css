@@ -18,7 +18,7 @@
 
   /* Text — shared ecosystem ink (Hub / Launcher / OS / Link) */
   --exo-secondary: #8a8a8a;  /* hints, links, icon buttons, READY */
-  --exo-muted: #555555;      /* labels, details, NOT INSTALLED */
+  --exo-muted: #808080;      /* labels, details, NOT INSTALLED */
   --exo-dim-mark: #555555;   /* brand glyph on a not-installed row */
 
   /* Status */

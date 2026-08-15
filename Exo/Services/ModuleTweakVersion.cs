@@ -47,7 +47,10 @@ internal static class ModuleTweakVersion
             ["brave"] = "4.5.5",
             ["discord"] = "4.5.3",
             ["steam"] = "4.5.4",
-            ["system"] = "4.5.4",
+            // 1.0.2: privacy levers the user guide already promised (advertising ID,
+            // tailored experiences, activity history, online speech, telemetry, feedback)
+            // now ride the same snapshot / detect / repair path as the other System keys.
+            ["system"] = "1.0.2",
             ["spotify"] = "4.5.4",
             // 4.5.3: congestion + bindings + Ethernet metric + feature majority in MatchesPreset.
             ["internet"] = "4.5.3",

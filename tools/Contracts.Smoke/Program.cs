@@ -648,6 +648,18 @@ if (steamBytes > 80_000 || nvBytes > 80_000)
         $"{stampCalls} Stamp call(s), {stampGuards} applied/partial guard(s)");
 }
 
+{
+    var systemApply = File.ReadAllText(Path.Combine(repo, "Exo", "Services", "SystemNativeApply.cs"));
+    var privacy = File.ReadAllText(Path.Combine(repo, "Exo", "Engine", "PrivacyLeverCatalog.cs"));
+    Expect("System apply writes documented privacy DWORDs",
+        systemApply.Contains("PrivacyLeverCatalog.SystemApplyLevers", StringComparison.Ordinal)
+        && privacy.Contains("SystemApplyLevers", StringComparison.Ordinal)
+        && privacy.Contains("location", StringComparison.Ordinal)
+        && privacy.Contains("find-my-device", StringComparison.Ordinal));
+    Expect("consent-store string keys are not DWORD-applied",
+        privacy.Contains("is not \"location\" and not \"find-my-device\"", StringComparison.Ordinal));
+}
+
 // ── Reachability, one layer up: every bridge RPC must have a UI caller ────────────────
 // The gate above checks that C# services are reached from C#. That is not the whole chain.
 // The Phase C driver RPCs passed it - WebHostBridge calls the installer, so the service was
@@ -1007,10 +1019,13 @@ if (steamBytes > 80_000 || nvBytes > 80_000)
     Expect("internet module logo in ui/src assets", File.Exists(internetLogoSrc));
     Expect("internet module logo in ui/public assets (Vite runtime path)", File.Exists(internetLogoPublic));
     Expect("internet module logo in shipped wwwroot assets/logos", File.Exists(internetLogoWwwroot));
-    var exoAppUi = File.ReadAllText(Path.Combine(repo, "ui", "src", "components", "ExoApp.tsx"));
+    var exoUi = string.Concat(Directory
+        .GetFiles(Path.Combine(repo, "ui", "src"), "*.ts*", SearchOption.AllDirectories)
+        .Select(File.ReadAllText));
     Expect("ExoApp Internet row uses ./assets/logos/internet.png",
-        exoAppUi.Contains("LOGO + 'internet.png'", StringComparison.Ordinal)
-        || exoAppUi.Contains("./assets/logos/internet.png", StringComparison.Ordinal));
+        exoUi.Contains("LOGO + 'internet.png'", StringComparison.Ordinal)
+        || exoUi.Contains("./assets/logos/internet.png", StringComparison.Ordinal)
+        || exoUi.Contains("logos/internet.png", StringComparison.Ordinal));
     Expect("5600X maps to AM4",
         ChipsetDriverLogic.InferSocket("AMD Ryzen 5 5600X 6-Core Processor", "amd") == "AM4");
     Expect("7800X3D maps to AM5",

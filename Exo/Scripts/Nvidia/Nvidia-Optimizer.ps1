@@ -1057,7 +1057,7 @@ function Import-ExoNipProfile {
     Write-Ok '3D Base Profile imported with Exo managed NPI'
 
     # Independently verify per-game profiles via native NVAPI status (same pack).
-    # NPI exit 0 alone used to leave gameProfilesApplied=false forever → Partial.
+    # NPI exit 0 alone used to leave gameProfilesApplied=false forever -> Partial.
     $appExpected = 0; $appVerified = 0; $appWritten = 0
     if ($nvExe) {
         try {
@@ -1235,7 +1235,7 @@ function Test-ExoDrsImportVerified {
 
     # Native NVAPI path already write-time verified Base + app profiles in a fresh session
     # inside Exo.NvDisplay (GpuDrs). NpiPath = 'native-nvapi' is not a file, so NPI
-    # -exportCustomized cannot run — that is not a failure, and must not force Partial.
+    # -exportCustomized cannot run - that is not a failure, and must not force Partial.
     if ($NpiPath -eq 'native-nvapi' -or -not (Test-Path -LiteralPath $NpiPath)) {
         return @{
             Verified      = $true
@@ -4021,7 +4021,7 @@ try {
                 Write-Warn ("Game profiles under-verified after import ({0}/{1} via {2})" -f $appVerified, $appExpected, [string]$profileImport.Method)
             }
         } elseif ([string]$profileImport.Method -eq 'npi') {
-            # Status probe unavailable — do not claim per-game green from exit 0 alone.
+            # Status probe unavailable - do not claim per-game green from exit 0 alone.
             Write-Warn ("Base Profile imported with Profile Inspector; per-game profiles could not be live-verified ({0} prepared)." -f $gameProfiles.Count)
         }
 

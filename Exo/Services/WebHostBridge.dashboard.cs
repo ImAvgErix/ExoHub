@@ -67,49 +67,103 @@ public sealed partial class WebHostBridge
 
         var vm = new DashboardViewModel(_services);
 
-        // Same set as verifyAll — overview used to under-count (6 of 9 modules).
+        // Same eight rows as the React shell, in rail order. Overview used to count five.
+
+        var nvidiaTag = vm.NvidiaStatusTag;
+
+        var amdTag = TagFromNativeDetect("amd");
+
+        var systemTag = TagFromNativeDetect("system");
+
+        var internetTag = InternetDashboardTag(vm.InternetStatusTag);
+
+        var steamTag = vm.SteamStatusTag;
+
+        var discordTag = vm.DiscordStatusTag;
+
+        var braveTag = vm.BraveStatusTag;
+
+        var spotifyTag = TagFromNativeDetect("spotify");
 
         var modules = new[]
 
         {
 
-            Row("nvidia", "NVIDIA", vm.NvidiaStatusTag),
+            Row("nvidia", "NVIDIA", nvidiaTag),
 
-            Row("amd", "AMD Radeon", TagFromNativeDetect("amd")),
+            Row("amd", "AMD", amdTag),
 
-            Row("system", "Your PC", TagFromNativeDetect("system")),
+            Row("system", "Windows", systemTag),
 
-            Row("internet", "Internet", vm.InternetStatusTag),
+            Row("internet", "Internet", internetTag),
 
-            Row("steam", "Steam", vm.SteamStatusTag),
+            Row("steam", "Steam", steamTag),
 
-            Row("discord", "Discord", vm.DiscordStatusTag),
+            Row("discord", "Discord", discordTag),
 
-            Row("brave", "Brave", vm.BraveStatusTag),
+            Row("spotify", "Spotify", spotifyTag),
 
-            Row("spotify", "Spotify", TagFromNativeDetect("spotify")),
+            Row("brave", "Brave", braveTag),
 
         };
 
+        var appliedCount = 0;
 
-
-        object? next = null;
-
-        if (vm.HasNextAction && !string.IsNullOrWhiteSpace(vm.NextActionModule))
+        foreach (var tag in new[] { nvidiaTag, amdTag, systemTag, internetTag, steamTag, discordTag, braveTag, spotifyTag })
 
         {
 
-            next = new
+            if (string.Equals(tag, "VERIFIED", StringComparison.OrdinalIgnoreCase)
 
-            {
+                || string.Equals(tag, "APPLIED", StringComparison.OrdinalIgnoreCase))
 
-                id = MapNextId(vm.NextActionModule),
-
-                label = string.IsNullOrWhiteSpace(vm.NextActionLabel) ? vm.NextActionModule : vm.NextActionLabel
-
-            };
+                appliedCount++;
 
         }
+
+        var total = modules.Length;
+
+        string? nextId = null;
+
+        string? nextLabel = null;
+
+        foreach (var row in new (string Id, string Label, string Tag)[]
+
+        {
+
+            ("nvidia", "NVIDIA", nvidiaTag),
+
+            ("amd", "AMD", amdTag),
+
+            ("system", "Windows", systemTag),
+
+            ("internet", "Internet", internetTag),
+
+            ("steam", "Steam", steamTag),
+
+            ("discord", "Discord", discordTag),
+
+            ("spotify", "Spotify", spotifyTag),
+
+            ("brave", "Brave", braveTag),
+
+        })
+
+        {
+
+            var state = RowState(row.Tag);
+
+            if (state is "applied" or "missing") continue;
+
+            nextId = row.Id;
+
+            nextLabel = row.Label;
+
+            break;
+
+        }
+
+        object? next = nextId is null ? null : new { id = nextId, label = nextLabel };
 
 
 
@@ -117,9 +171,17 @@ public sealed partial class WebHostBridge
 
         {
 
-            overview = vm.OverviewPrimary,
+            overview = $"{appliedCount} / {total} applied",
 
-            heroSummary = vm.HeroSummary,
+            heroSummary = appliedCount >= total
+
+                ? "All optimizers applied"
+
+                : nextLabel is not null
+
+                    ? $"Next: {nextLabel}"
+
+                    : $"{appliedCount}/{total} applied",
 
             specs = new
 
@@ -157,6 +219,31 @@ public sealed partial class WebHostBridge
 
         };
 
+    }
+
+    /// <summary>
+    /// Home must not green Internet from network-optimizer.json alone. A fresh probe
+    /// cache plus MatchesPreset is the same bar as module detect.
+    /// </summary>
+    private string InternetDashboardTag(string vmTag)
+    {
+        try
+        {
+            if (_internetProbeCache is not null
+                && DateTimeOffset.UtcNow - _internetProbeCacheUtc < InternetProbeFreshness)
+            {
+                var saved = _internetProbeCache.ActivePreset;
+                if (saved is NetworkPreset.LowestLatency or NetworkPreset.HighestThroughput
+                    && _services.Network.MatchesPreset(_internetProbeCache, saved))
+                    return "VERIFIED";
+            }
+        }
+        catch
+        {
+            /* keep the cheap tile tag */
+        }
+
+        return vmTag;
     }
 
 

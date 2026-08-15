@@ -528,7 +528,7 @@ if ($state -and [bool]$state.profileApplied -and $state.profileFile) {
                     $appExpected = [int]$Matches[2]
                 }
                 # Base-only series .nip has app-profiles=0. Exit 3 then means some Base pins
-                # this driver does not implement — normal, not "profiles drifted".
+                # this driver does not implement - normal, not "profiles drifted".
                 $statusIsBaseOnly = $appExpected -eq 0
                 if ($appExpected -gt 0 -and $appVerified -ge [Math]::Max(1, [int]($appExpected * 0.6))) {
                     $drsAppProfilesOk = $true
@@ -767,7 +767,7 @@ if ($state -and $applied) {
         $deltas = [bool]$state.gameProfileDeltas
     }
     # Prefer live app-profile verification when --drs-status ran against a multi-profile pack.
-    # Status often runs against the series Base-only .nip (0 app profiles) — exit 0 there must
+    # Status often runs against the series Base-only .nip (0 app profiles) - exit 0 there must
     # not wipe a good Apply that already verified 46/46 game profiles at write time.
     $gameOk = $false
     if ($drsAppProfilesOk) {
@@ -1038,7 +1038,7 @@ if ($applyStatus -eq 'partial') {
     [bool]$state.gameProfilesApplied -and
     $drsLive -ne 'drifted'
 ) {
-    # Full Apply recorded — trust it for status rows. Soft latency map / Base-only
+    # Full Apply recorded - trust it for status rows. Soft latency map / Base-only
     # status must not paint "Off: Competitive 3D / game profiles" after a clean Apply.
     $isApplied = $true
     $applied = $true

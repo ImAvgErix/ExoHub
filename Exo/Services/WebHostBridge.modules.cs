@@ -58,11 +58,13 @@ public sealed partial class WebHostBridge
 
     /// <summary>
 
-    /// Dashboard tag → the shell's four words. MEASURED counts as applied (Internet reports it
+    /// Dashboard tag → the shell's words. MEASURED is a live route sample, not a verified
 
-    /// after a verified apply); DRIFTED and NEEDS ATTENTION are the "applied but the machine
+    /// apply — the Internet tile says so ("settings not verified"). Folding it into Applied
 
-    /// moved" cases the shell shows as STUCK so they can be retried.
+    /// made Home lie. PARTIAL is a half-apply. DRIFTED / NEEDS ATTENTION stay blocked so
+
+    /// they can be retried.
 
     /// </summary>
 
@@ -72,7 +74,9 @@ public sealed partial class WebHostBridge
 
         "MISSING" => "missing",
 
-        "VERIFIED" or "APPLIED" or "MEASURED" => "applied",
+        "VERIFIED" or "APPLIED" => "applied",
+
+        "MEASURED" or "PARTIAL" => "partial",
 
         "DRIFTED" or "NEEDS ATTENTION" => "blocked",
 
