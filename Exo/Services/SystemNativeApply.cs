@@ -74,7 +74,7 @@ internal static class SystemNativeApply
             .Select(l => new RegLever(l.Id, l.Title, l.Hive, l.Path, l.Name, l.Value, l.Why, l.NeedsReboot))
             .ToArray();
 
-    private static readonly RegLever[] AllRegLevers = [..RegLevers, ..PrivacyLevers];
+    private static readonly RegLever[] AllRegLevers = [.. RegLevers, .. PrivacyLevers];
 
     // ── USB device power saving ───────────────────────────────────────────────────────────
 
